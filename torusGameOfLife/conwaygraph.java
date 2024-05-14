@@ -17,6 +17,7 @@ public class conwaygraph{
 	private List<Node> nodes;
 	public TorusRender torusRender;
 	public Torus classTorus;
+	public int helperInt;
 
 	public conwaygraph(int rows, int columns, TorusRender t, Torus torus) {
 		this.rows = rows;
@@ -24,6 +25,7 @@ public class conwaygraph{
 		this.nodes = new ArrayList<>();
 		this.torusRender = t;
 		this.classTorus = torus;
+		this.helperInt = 0;
 		createGrid();
 		connectionPath();
 		giveSquares();
@@ -70,11 +72,23 @@ public class conwaygraph{
 	}
 
 	public void update(){
-		List<Node> newGen = new ArrayList<>();
+
+		/** Debugging crap
+		for (Node node : nodes) {
+			node.status(false);
+		}
+
+		makeNodeAlive(helperInt);
+		return;
+		*/
+
+		//List<Node> newGen = new ArrayList<>();
 
 		for (Node node : nodes) {
 			int aliveNeighbors = countAliveNeighbors(node);
+			//System.out.println(aliveNeighbors);
 
+			/** Redundant code
 			if (node.isAlive()) {
 				if (aliveNeighbors < 2 || aliveNeighbors > 3) {
 					node.status(false);
@@ -85,9 +99,22 @@ public class conwaygraph{
 					node.status(true);
 				}
 			}
-			newGen.add(node);
+			*/
+
+			if (aliveNeighbors < 2 || aliveNeighbors > 3) {
+				node.status(false);
+			}
+			else if (aliveNeighbors == 3) {
+				node.status(true);
+			}
+
+
+			//newGen.add(node);
 		}
-		nodes = newGen;
+		//nodes = newGen;
+		for (Node node : nodes) {
+			node.updateLife();
+		}
 	}
 
     private int countAliveNeighbors(Node node) {
@@ -124,7 +151,11 @@ public class conwaygraph{
     		}
     	}
 
+    	makeNodeAlive(1);
+
+    	
     	//Inital set up of alive nodes. Can be changed.
+    	/**
     	for(Node n : nodes.get(10).getNeighbors()) {
     		n.status(true);
     		System.out.println("this ran!");
@@ -141,8 +172,18 @@ public class conwaygraph{
     		n.status(true);
     		System.out.println("this ran!");
     	}
+    	*/
 
 
+    }
+
+    public void makeNodeAlive(int nodeNum) {
+    	nodes.get(nodeNum).status(true);
+    	nodes.get(nodeNum).updateLife();
+    	for(Node n : nodes.get(nodeNum).getNeighbors()) {
+    		n.status(true);
+    		n.updateLife();
+    	}
     }
 
     public void startGameOfLife(int delay) {
@@ -151,6 +192,7 @@ public class conwaygraph{
 	        public void actionPerformed(ActionEvent e) {
 	        	//System.out.println("Updated"); //Used to make sure nodes are being updated
 	            update();
+	            //helperInt++;
 	            torusRender.repaint();
 	        }
 	    });

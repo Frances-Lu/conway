@@ -6,11 +6,13 @@ import java.awt.Color;
 
 public class Node {
 	private boolean alive; 
+	private boolean aliveNextRound;
 	private List<Node> neighbors; 
 	private Square square;
 
 	public Node(){
 		this.alive = false;
+		this.aliveNextRound = false;
 		this.neighbors = new ArrayList<>();
 	}
 
@@ -22,10 +24,14 @@ public class Node {
 		this.square = someSquare;
 	}
 
-	public void status(boolean alive) {
+	public void status(boolean fate) {
 		//System.out.println("I am running!");
 		//System.out.println("test!");
-		this.alive = alive;
+		this.aliveNextRound = fate;
+	}
+
+	public void updateLife() {
+		this.alive = this.aliveNextRound;
 		if(alive) {
 			square.changeColor(Color.WHITE);
 		}

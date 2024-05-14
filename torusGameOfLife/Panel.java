@@ -23,7 +23,7 @@ public class Panel {
         frame.setVisible(true);
 
         conwaygraph g = new conwaygraph(30, 76, renderPanel, t);
-        g.startGameOfLife(750);
+        g.startGameOfLife(500); //40 second delay!
 
     }
 

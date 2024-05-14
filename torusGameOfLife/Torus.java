@@ -82,12 +82,14 @@ public class Torus {
         }
         return Color.BLACK;
         */
-        //return Color.BLACK; //USING THIS FOR NOW.
+        return Color.BLACK; //USING THIS FOR NOW.
+        /**
         if ((i + j) % 2 == 0) {
             return Color.BLACK;
         } else {
             return Color.WHITE;
         }
+        */
     }
 
     /**
