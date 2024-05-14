@@ -47,7 +47,7 @@ public class Matrix3D {
 
     public static void main(String[] args) {
 
-        //Testing code! (It works)
+
         Matrix3D m = new Matrix3D(new double[] {
             2,3,2,
             1,1,-1,

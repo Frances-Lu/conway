@@ -21,10 +21,6 @@ public class Panel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 600);
         frame.setVisible(true);
-
-        conwaygraph g = new conwaygraph(30, 76, renderPanel, t);
-        g.startGameOfLife(750);
-
     }
 
 }
