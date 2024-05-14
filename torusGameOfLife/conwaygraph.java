@@ -130,18 +130,39 @@ public class conwaygraph{
 
 
     	/**
+    	 * 
     	 * ! ! !
+    	 * 
     	 * 
     	 * NOTE: Here is where you could make certain nodes dead
     	 * or alive via makeNodeAlive() or makeNeighborsAlive()
     	 * to play/see the patterns.
     	 * 
+    	 * 
     	 * ! ! !
     	 * 
+    	 * 
     	 */
-    	makeNodeAlive(1);
-    	makeNeighborsAlive(1);
 
+    	//R-pentomino config.
+    	//Known to be the most "active" 5-cell config. in CoL on the plane
+    	//However, here, not so much!
+    	/**
+    	makeNodeAlive(2);
+    	makeNodeAlive(77);
+    	makeNodeAlive(78);
+    	makeNodeAlive(79);
+    	makeNodeAlive(153);
+    	*/
+
+    	//R-pentomino config. oriented differently.
+    	//Much more active than other orientation!
+    	//(I recommend speeding up the simulation)
+    	makeNodeAlive(1);
+    	makeNodeAlive(2);
+    	makeNodeAlive(78);
+    	makeNodeAlive(154);
+    	makeNodeAlive(79);
 
     }
 

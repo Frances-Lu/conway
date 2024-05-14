@@ -11,4 +11,4 @@ Williams College CSCI 136
 Last updated 5/14/24
 
 # Note on Setting up Alive and Dead Nodes
-We did not have time to implement a system for the user to simply select which nodes they want alive/dead at the start as we said we would do. To work around this, we have found you can use methods in conwaygraph.java in the giveSquares() method to control which squares start alive (using makeNodeAlive() and makeNeighborsAlive() methods). We have commented a note and currently have node 1 alive along with its neighbors, resulting in a 3 by 3 square to be alive at the start.
+We did not have time to implement a system for the user to simply select which nodes they want alive/dead at the start as we said we would do. To work around this, we have found you can use methods in conwaygraph.java in the giveSquares() method to control which squares start alive (using makeNodeAlive() and makeNeighborsAlive() methods). We currently have an R-pentomino configuration (5 alive nodes in a somewhat "R" shape).

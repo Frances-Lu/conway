@@ -25,7 +25,7 @@ public class Panel {
         frame.setVisible(true);
 
         conwaygraph g = new conwaygraph(30, 76, renderPanel, t);
-        g.startGameOfLife(500); //.5 second delay, could change based on desired speed.
+        g.startGameOfLife(200); //.2 second delay, could change based on desired speed.
 
     }
 
