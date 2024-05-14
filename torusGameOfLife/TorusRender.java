@@ -49,8 +49,6 @@ public class TorusRender extends JPanel {
             double y = -2 * Math.PI * (event.getY() - 250) / t.getHeight() * .01; //Angle of movement (times .01 to make rotation slower)
             double x = 2 * Math.PI * (event.getX() - 250) / t.getWidth() * .01;
 
-            //System.out.println("" + event.getX() + "," + event.getY());
-
             //Construct transformation matrices (heading and pitch)
             double heading = x;
             Matrix3D headingTransform = new Matrix3D(new double[]
@@ -64,9 +62,10 @@ public class TorusRender extends JPanel {
                 0, Math.cos(pitch), Math.sin(pitch),
                 0, -Math.sin(pitch), Math.cos(pitch)});
 
-            //Combine the two matrixes
+            //Combine the two matrices
             headingTransform.combine(pitchTransform.getMatrix());
 
+            //Use rotation matrix to calculate new position for every square in the torus
             t.recalcPosition(headingTransform);
             
         }
@@ -75,7 +74,8 @@ public class TorusRender extends JPanel {
     
 
     /**
-     * Got this from GraphicsCoinStrip (lab 2)
+     * Paint method
+     * @param g graphics
      */
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g; //Need to cast graphics into graphics2D

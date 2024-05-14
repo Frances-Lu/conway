@@ -10,14 +10,16 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 
 
-
+/**
+ * Class that helps deal with the interation between nodes and squares
+ * Contains the graph data structure
+ */
 public class conwaygraph{
 	private int rows;
 	private int columns;
 	private List<Node> nodes;
 	public TorusRender torusRender;
 	public Torus classTorus;
-	public int helperInt;
 
 	public conwaygraph(int rows, int columns, TorusRender t, Torus torus) {
 		this.rows = rows;
@@ -25,7 +27,6 @@ public class conwaygraph{
 		this.nodes = new ArrayList<>();
 		this.torusRender = t;
 		this.classTorus = torus;
-		this.helperInt = 0;
 		createGrid();
 		connectionPath();
 		giveSquares();
@@ -37,6 +38,9 @@ public class conwaygraph{
 		}
 	}
 
+	/**
+	 * Connects each node with its 8 neighbors
+	 */
 	private void connectionPath() {
 		for (int i = 0; i< rows; i++) {
 			for (int j = 0; j< columns; j++) {
@@ -71,35 +75,13 @@ public class conwaygraph{
 		}
 	}
 
+	/**
+	 * Calculates the next iteration of Conway's Game of Life
+	 */
 	public void update(){
-
-		/** Debugging crap
-		for (Node node : nodes) {
-			node.status(false);
-		}
-
-		makeNodeAlive(helperInt);
-		return;
-		*/
-
-		//List<Node> newGen = new ArrayList<>();
 
 		for (Node node : nodes) {
 			int aliveNeighbors = countAliveNeighbors(node);
-			//System.out.println(aliveNeighbors);
-
-			/** Redundant code
-			if (node.isAlive()) {
-				if (aliveNeighbors < 2 || aliveNeighbors > 3) {
-					node.status(false);
-				}
-			} 
-			else {
-				if (aliveNeighbors == 3) {
-					node.status(true);
-				}
-			}
-			*/
 
 			if (aliveNeighbors < 2 || aliveNeighbors > 3) {
 				node.status(false);
@@ -107,16 +89,15 @@ public class conwaygraph{
 			else if (aliveNeighbors == 3) {
 				node.status(true);
 			}
-
-
-			//newGen.add(node);
 		}
-		//nodes = newGen;
 		for (Node node : nodes) {
 			node.updateLife();
 		}
 	}
 
+	/**
+	 * @return the number of alive neighbors for a given node.
+	 */
     private int countAliveNeighbors(Node node) {
         int count = 0;
         for (Node neighbor : node.getNeighbors()) {
@@ -127,72 +108,72 @@ public class conwaygraph{
         return count;
     }
 
+    /**
+     * Gives each node in the graph its respective square to control.
+     * Should be black if dead, and white if alive.
+     */
     public void giveSquares() {
-    	//ArrayList<Square> sqArr = classTorus.convertToArr();
    		ArrayList<Square> sqArr = classTorus.arrayOfSquares;
     	for(int i = 0; i < sqArr.size(); i++) {
-    		/** Crappy code? Need to fingure out what I was doing here. Don't delete yet.
-    		if(i >= 100 && i <= 110) {
- 				sqArr.get(i).changeColor(Color.WHITE);
- 			}
- 			if((i % 2) == 0 || (i + 1) == sqArr.size()) {
- 				nodes.get(i).setSquare(sqArr.get(i));
- 			}
- 			else {
- 				nodes.get(i).setSquare(sqArr.get(i+1));
- 			}
- 			*/
     		nodes.get(i).setSquare(sqArr.get(i));
-    		if(sqArr.get(i).color.equals(Color.BLACK)) { //Makes sure that nodes that are black are dead, otherwise they are alive.
+    		//Makes sure that nodes that start black are dead, otherwise they are alive.
+    		//Note: code currently needed due to every node starting dead and being colored black automatically
+    		if(sqArr.get(i).color.equals(Color.BLACK)) { 
     			nodes.get(i).status(false);
+    			nodes.get(i).updateLife();
     		}
     		else {
     			nodes.get(i).status(true);
+    			nodes.get(i).updateLife();
     		}
     	}
 
-    	makeNodeAlive(1);
 
-    	
-    	//Inital set up of alive nodes. Can be changed.
     	/**
-    	for(Node n : nodes.get(10).getNeighbors()) {
-    		n.status(true);
-    		System.out.println("this ran!");
-    	}
-    	for(Node n : nodes.get(23).getNeighbors()) {
-    		n.status(true);
-    		System.out.println("this ran!");
-    	}
-    	for(Node n : nodes.get(14).getNeighbors()) {
-    		n.status(true);
-    		System.out.println("this ran!");
-    	}
-    	for(Node n : nodes.get(20).getNeighbors()) {
-    		n.status(true);
-    		System.out.println("this ran!");
-    	}
-    	*/
+    	 * ! ! !
+    	 * 
+    	 * NOTE: Here is where you could make certain nodes dead
+    	 * or alive via makeNodeAlive() or makeNeighborsAlive()
+    	 * to play/see the patterns.
+    	 * 
+    	 * ! ! !
+    	 * 
+    	 */
+    	makeNodeAlive(1);
+    	makeNeighborsAlive(1);
 
 
     }
 
+    /**
+     * We didn't have time to get the grid of squares to select at the beginning to be alive
+     * like we planed. However, this method (along with makeNeighborsAlive) can be used to make certain nodes
+     * alive and see the results.
+     */
+    //Makes a given node alive.
     public void makeNodeAlive(int nodeNum) {
     	nodes.get(nodeNum).status(true);
     	nodes.get(nodeNum).updateLife();
+    	
+    }
+
+    //Makes a given node's neighbors alive.
+    public void makeNeighborsAlive(int nodeNum) {
     	for(Node n : nodes.get(nodeNum).getNeighbors()) {
     		n.status(true);
     		n.updateLife();
     	}
     }
 
+    /**
+     * The timer in between iterations of Conway's Game of Life
+     * @param delay the delay in between iterations in milliseconds
+     */
     public void startGameOfLife(int delay) {
 	    Timer timer = new Timer(delay, new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
-	        	//System.out.println("Updated"); //Used to make sure nodes are being updated
 	            update();
-	            //helperInt++;
 	            torusRender.repaint();
 	        }
 	    });
@@ -201,25 +182,3 @@ public class conwaygraph{
 	}
 
 }
-
-//transfer to 1D array, take first square and put that in the node, amke a constructor and have it as a variable
-/*public int [] convert2DTo1() {
-	int [] array = new [csSides * sides];
-	int index = 0;
-	for (int i = 0; i<csSides; i++) {
-		for (int j = 0; j < sides; j++) {
-			array[index]= squares[i][j].getValue();
-			index++;
-		}
-	}
-	return array;
-}*/
-
-//put this in torus rendder 
-
-
-
-//every node have one square 
-//create on the other file, have that code call this method 
-
-//make a method 

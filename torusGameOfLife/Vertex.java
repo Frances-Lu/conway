@@ -1,5 +1,8 @@
 package torusGameOfLife;
 
+/**
+ * Vertex class
+ */
 public class Vertex {
 
     public double x; //x-coord
@@ -21,6 +24,8 @@ public class Vertex {
     /**
      * Subtracts v2 from v1
      * That is, v1 - v2.
+     * @param v1 vertex to be subtracted from
+     * @param v2 vertex to subtract with
      */
     public static Vertex subtract(Vertex v1, Vertex v2) {
         double x = v1.x - v2.x;
@@ -30,8 +35,14 @@ public class Vertex {
         return new Vertex(x,y,z);
     }
 
-    /** This method provides the cross product of two vectors that start from
-     * the reference vector.
+    /** 
+     * Provides the cross product of two vectors that start from the reference vector.
+     * As v1 and v2 don't start at the tip of referenceV, we subtract both from refernceV
+     * so that v1 and v2 effectivly start at the tip of the reference vector.
+     * 
+     * @param referenceV The reference vector.
+     * @param v1 First vector
+     * @param v2 Second vector
      */
     public static Vertex crossProduct(Vertex referenceV, Vertex v1, Vertex v2) {
         Vertex v1New = subtract(v1, referenceV);

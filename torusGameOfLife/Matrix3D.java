@@ -1,9 +1,10 @@
 package torusGameOfLife;
 
 import java.util.*;
+
 /**
- * Class that helps with math for rotation by using
- * 3 by 3 matrices
+ * Matrix class
+ * Helps with math for rotation by using 3 by 3 matrices
  */
 public class Matrix3D {
 
@@ -19,7 +20,7 @@ public class Matrix3D {
 
     /**
      * Combines the current matrix with another matrix
-     * double[] anotherArr should be an array of length 9
+     * @param anotherArr should be an array of length 9
      */
     public void combine(double[] anotherArr) {
         int count = 0;
@@ -38,6 +39,12 @@ public class Matrix3D {
         //System.out.println(Arrays.toString(newMatrix));
     }
 
+    /** 
+     * Calculates a new Vertex position by mulitplying an old postion Vertex
+     * with a 3 by 3 (rotation) matrix 
+     * @param oldV old position vertex
+     * @return new position vertex
+     */
     public Vertex calcNewPosition(Vertex oldV) {
         double x = oldV.x * matrix[0] + oldV.y * matrix[3] + oldV.z * matrix[6];
         double y = oldV.x * matrix[1] + oldV.y * matrix[4] + oldV.z * matrix[7];
@@ -47,7 +54,7 @@ public class Matrix3D {
 
     public static void main(String[] args) {
 
-        //Testing code! (It works)
+        //Testing code
         Matrix3D m = new Matrix3D(new double[] {
             2,3,2,
             1,1,-1,

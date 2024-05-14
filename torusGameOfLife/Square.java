@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
+/**
+ * Class for the Squares that make up the torus
+ */
 public class Square { 
 
         Vertex[] sqVertices = new Vertex[4];
@@ -19,24 +22,21 @@ public class Square {
             this.indentityInt = someInt;
         }
 
-        public boolean crossProductPostitive() {
+        /**
+         * Calculates if the cross product is negative
+         * That it, the cross product vector points towards
+         * the screen.
+         */
+        public boolean crossProductNeg() {
             return (Vertex.crossProduct(sqVertices[0], sqVertices[1], sqVertices[3]).z < 0);
         }
 
-        //Moves the square
-        public void transpose(double dx, double dy, double dz) {
-            for(int i = 0; i <= 3; i++) {
-                sqVertices[i].x += dx;
-                sqVertices[i].y += dy;
-                sqVertices[i].z += dz;
-            }
-        }
-
-        //Used to change the color of the square.
+        //Changes the color of the square.
         public void changeColor(Color newColor) { 
             this.color = newColor;
         }
 
+        //Draws the square, based on fillPolygon from graphics2D
         public void drawSquare(Graphics2D g2) {
 
             int[] xPoints = new int[4];

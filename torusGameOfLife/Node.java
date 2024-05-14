@@ -4,6 +4,9 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.Color;
 
+/**
+ * Node class
+ */
 public class Node {
 	private boolean alive; 
 	private boolean aliveNextRound;
@@ -24,12 +27,17 @@ public class Node {
 		this.square = someSquare;
 	}
 
+	/**
+	 * Sets the node to life/death for the next iteration.
+	 * @param fate either true (for alive) or false (for dead)
+	 */
 	public void status(boolean fate) {
-		//System.out.println("I am running!");
-		//System.out.println("test!");
 		this.aliveNextRound = fate;
 	}
 
+	/**
+	 * Updates the status for next iteration to become this iteration.
+	 */
 	public void updateLife() {
 		this.alive = this.aliveNextRound;
 		if(alive) {
@@ -40,6 +48,9 @@ public class Node {
 		}
 	}
 
+	/**
+	 * @return the list of the node's neighbors
+	 */
 	public List<Node> getNeighbors() {
 		return neighbors;
 	} 

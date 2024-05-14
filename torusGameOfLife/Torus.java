@@ -6,14 +6,16 @@ import java.util.*;
 
 /**
  * Class for Torus
+ * Calculates the math for squares/nodes of the torus
+ * Note: all static finals (SIDES, CS_SIDES, etc.) can be changed.
+ * We just selected these values to best see the torus.
  */
 public class Torus {
 
-    //Sides = 76, csSides = 30
-    public int sides = 76; //The number of vertices for the entire circle (large, the donut part looking from the top)
-    public int csSides = 30; //The number of vertices for the cross section circle (small, would need to cut donut)
-    public double radius = 3 * 45.0; //Should be a scalar times some number to keep track of ratios between radis & csRadius
-    public double csRadius = 1 * 45.0;
+    public static final int SIDES = 76; //The number of vertices for the entire circle (large, the donut part looking from the top)
+    public static final int CS_SIDES = 30; //The number of vertices for the cross section circle (small, would need to cut donut)
+    public static final double RADIUS = 3 * 45.0; //Should be a scalar times some number to keep track of ratios between radis & csRadius
+    public static final double CS_RADIUS = 1 * 45.0;
 
     public Square[][] squares; //Right now a 2D array, but probably will change to a graph when Graph class is worked on.
     public Vertex[][] vertices;
@@ -22,20 +24,20 @@ public class Torus {
 
 
     /**
-     * Calculates the vertices based on sides, csSides, radius, and csRadius
+     * Calculates the vertices based on SIDES, CS_SIDES, RADIUS, and CS_RADIUS
      * Then, uses those vertices to set up (as of now) a double array with square objects
      */
     public void initializeTorus() {
 
         // Calculate the vertices' x, y, and z location
         double theta, phi, x, y, z, helper;
-        vertices = new Vertex[csSides][sides];
-        for(int i = 0; i < csSides; i ++) { //Iterate along the cross section
-            theta = 2 * Math.PI * i / csSides; //Radians of angle of cross section
-            for(int j = 0; j < sides; j++) { //Iterate around the torus
-                phi = 2 * Math.PI * j / sides; //Radians of angle of "top down" of torus.
-                helper = radius + (csRadius * Math.cos(theta)); //Cross sectional radius from center, based on theta
-                z = csRadius * Math.sin(theta);
+        vertices = new Vertex[CS_SIDES][SIDES];
+        for(int i = 0; i < CS_SIDES; i ++) { //Iterate along the cross section
+            theta = 2 * Math.PI * i / CS_SIDES; //Radians of angle of cross section
+            for(int j = 0; j < SIDES; j++) { //Iterate around the torus
+                phi = 2 * Math.PI * j / SIDES; //Radians of angle of "top down" of torus.
+                helper = RADIUS + (CS_RADIUS * Math.cos(theta)); //Cross sectional radius from center, based on theta
+                z = CS_RADIUS * Math.sin(theta);
                 x = helper * Math.cos(phi);
                 y = helper * Math.sin(phi);
                 vertices[i][j] = new Vertex(x,y,z);
@@ -45,16 +47,16 @@ public class Torus {
 
         // Calculate the squares
         /**
-         * Need (i + 1) % sides to loop back to zero if i + 1 = csSides, same for j/sides
+         * Need (i + 1) % SIDES to loop back to zero if i + 1 = CS_SIDES, same for j/SIDES
          * v1, v2, v3, and v4 should go in square formation to help with drawing the square
          */ 
         Vertex v1, v2, v3, v4;
         int nextI, nextJ, count = 0;
-        squares = new Square[csSides][sides];
-        for (int i = 0; i < csSides; i++) {
-            for (int j = 0; j < sides; j++) {
-                nextI = (i + 1) % csSides;
-                nextJ = (j + 1) % sides;
+        squares = new Square[CS_SIDES][SIDES];
+        for (int i = 0; i < CS_SIDES; i++) {
+            for (int j = 0; j < SIDES; j++) {
+                nextI = (i + 1) % CS_SIDES;
+                nextJ = (j + 1) % SIDES;
                 v1 = vertices[i][j];
                 v2 = vertices[i][nextJ];
                 v3 = vertices[nextI][nextJ];
@@ -76,33 +78,25 @@ public class Torus {
      * 
      */
     public Color colorHelper(int i, int j) {
-        /** ALT
-        if(i == 2) {
-            return Color.WHITE;
-        }
-        return Color.BLACK;
-        */
-        return Color.BLACK; //USING THIS FOR NOW.
+        return Color.BLACK; //Makes all nodes dead.
+
         /**
+         * Checkerboard pattern.
+         * Currently node in use, useful to see torus.
+         *
         if ((i + j) % 2 == 0) {
             return Color.BLACK;
         } else {
             return Color.WHITE;
         }
         */
+
     }
 
     /**
-     * Transposes all the squares in a given direction
+     * Rotates all squares in the torus based on a given rotation matrix.
+     * @param tMartrix the transformation (or rotation) matrix
      */
-    public void transposeSquares(double dx, double dy, double dz) {
-        for (Square[] row : squares) {
-            for (Square square : row) {
-                square.transpose(dx,dy,dz);
-            }
-        }
-    }
-
     public void rotateSquares(Matrix3D tMatrix) {
         for (Square[] row : squares) {
             for (Square square : row) {
@@ -119,18 +113,19 @@ public class Torus {
     public void drawTorus(Graphics2D g2) {
         drawableSquares = new ArrayList<Square>();
 
+        //Calculates the cross product, keep the ones that we have to draw
         for (Square[] row : squares) {
             for (Square square : row) {
-                if(square.crossProductPostitive()) {
+                if(square.crossProductNeg()) {
                     drawableSquares.add(square);
                 }
             }
         }
 
-        //System.out.println("test0");
+        //Sort the squares from back to front to be drawn.
         quickSort(new SquareComparator(), drawableSquares);
-        //System.out.println("test1");
 
+        //Draws all the sqaures
         for(Square square : drawableSquares) {
             square.drawSquare(g2);
         }
@@ -138,7 +133,7 @@ public class Torus {
     }
 
     /**
-     * My quicksort code from lab 5
+     * My quicksort code from lab 5, can work with any given ArrayList<Square>
      */
     public void quickSortHelper(Comparator<Square> c, int lowIndex, int highIndex, int pivotIndex, ArrayList<Square> arrList) {
         int i = lowIndex, j = highIndex;
@@ -176,6 +171,7 @@ public class Torus {
         }
     }
 
+    //Quick sort
     public void quickSort(Comparator<Square> c, ArrayList<Square> arrList) {
         int randomPivot = (int) (Math.random() * arrList.size());
         quickSortHelper(c, 0,arrList.size() - 1,randomPivot, arrList);
@@ -183,21 +179,9 @@ public class Torus {
     }
 
     /**
-     * Currently not in use, but don't delete yet.
-     * 
-    public ArrayList<Square> convertToArr() {
-        ArrayList<Square> array = new ArrayList<Square>();
-        for (int i = 0; i<csSides; i++) {
-            for (int j = 0; j < sides; j++) {
-                array.add(squares[i][j]);
-            }
-        }
-        quickSort(new SquareComparator2(), array);
-        //System.out.println(array.size());
-        return array;
-    }
-    */
-
+     * Comparator class to help sort squares' z-value from back to front.
+     * Back = largest z-value; front = smallest z-value
+     */
     class SquareComparator implements Comparator<Square>{
         public int compare(Square s1, Square s2){
             if (s1.sqVertices[0].z < s2.sqVertices[0].z) return 1; 
@@ -205,17 +189,6 @@ public class Torus {
             return 0; 
         }
     }
-
-    /**
-     * Currently not in use, but don't delete yet.
-     *
-    class SquareComparator2 implements Comparator<Square> {
-        public int compare(Square s1, Square s2){
-            return  s1.indentityInt - s2.indentityInt;
-        }
-    }
-    */
-
 
 }
 
