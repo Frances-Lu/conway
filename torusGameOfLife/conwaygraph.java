@@ -1,9 +1,15 @@
 //every node gets a swuqare that controls its color 
 //figure out animation on how to make this move
 //make sure the rows and cols can be adjustable based on the user input
-
+package torusGameOfLife;
 
 import java.util.*;
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Color;
+
+
 
 public class conwaygraph{
 	private int rows;
@@ -13,7 +19,7 @@ public class conwaygraph{
 	public Torus classTorus;
 	public int helperInt;
 
-	public conwaygraph(int rows, int columns) {
+	public conwaygraph(int rows, int columns, TorusRender t, Torus torus) {
 		this.rows = rows;
 		this.columns = columns;
 		this.nodes = new ArrayList<>();
@@ -22,10 +28,11 @@ public class conwaygraph{
 		this.helperInt = 0;
 		createGrid();
 		connectionPath();
+		giveSquares();
 	}
 
 	private void createGrid() {
-		for (int i =0; i< rows * columns; i++){
+		for (int i =0; i < rows * columns; i++){
 			nodes.add(new Node());
 		}
 	}
@@ -36,10 +43,10 @@ public class conwaygraph{
 				int currentIndex = i * columns + j;
 				Node currentNode = nodes.get(currentIndex);
 
-				int right = i * columns + (j+1) % columns;
+				int right = i * columns + ((j+1) % columns);
 				currentNode.addNeighbor(nodes.get(right));
 
-				int left = i * columns + (j-1+columns) % columns;
+				int left = i * columns + ((j-1+columns) % columns);
 				currentNode.addNeighbor(nodes.get(left));
 
 				int up = ((i-1+rows) % rows) * columns + j;
@@ -48,16 +55,16 @@ public class conwaygraph{
 				int down = ((i+1) % rows) * columns + j;
 				currentNode.addNeighbor(nodes.get(down));
 
-				int upRight = ((i - 1 + rows) % rows) * columns + (j + 1) % columns;
+				int upRight = ((i - 1 + rows) % rows) * columns + ((j + 1) % columns);
 				currentNode.addNeighbor(nodes.get(upRight));
 
-				int upLeft = ((i - 1 + rows) % rows) * columns + (j - 1 + columns) % columns; 
+				int upLeft = ((i - 1 + rows) % rows) * columns + ((j - 1 + columns) % columns); 
 				currentNode.addNeighbor(nodes.get(upLeft));
 
-				int downRight = ((i+1) % rows) * columns + (j+1) % columns;
+				int downRight = ((i+1) % rows) * columns + ((j+1) % columns);
 				currentNode.addNeighbor(nodes.get(downRight));
 
-				int downLeft = ((i+1) % rows) * columns + (j-1 + columns) % columns;
+				int downLeft = ((i+1) % rows) * columns + ((j-1 + columns) % columns);
 				currentNode.addNeighbor(nodes.get(downLeft));
 
 			}
@@ -86,7 +93,8 @@ public class conwaygraph{
 				if (aliveNeighbors < 2 || aliveNeighbors > 3) {
 					node.status(false);
 				}
-			} else {
+			} 
+			else {
 				if (aliveNeighbors == 3) {
 					node.status(true);
 				}
@@ -193,3 +201,25 @@ public class conwaygraph{
 	}
 
 }
+
+//transfer to 1D array, take first square and put that in the node, amke a constructor and have it as a variable
+/*public int [] convert2DTo1() {
+	int [] array = new [csSides * sides];
+	int index = 0;
+	for (int i = 0; i<csSides; i++) {
+		for (int j = 0; j < sides; j++) {
+			array[index]= squares[i][j].getValue();
+			index++;
+		}
+	}
+	return array;
+}*/
+
+//put this in torus rendder 
+
+
+
+//every node have one square 
+//create on the other file, have that code call this method 
+
+//make a method 

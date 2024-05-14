@@ -1,9 +1,14 @@
+package torusGameOfLife;
+
 import java.util.*;
+import javax.swing.*;
+import java.awt.Color;
 
 public class Node {
 	private boolean alive; 
 	private boolean aliveNextRound;
 	private List<Node> neighbors; 
+	private Square square;
 
 	public Node(){
 		this.alive = false;
@@ -33,7 +38,7 @@ public class Node {
 		else {
 			square.changeColor(Color.BLACK);
 		}
-
+	}
 
 	public List<Node> getNeighbors() {
 		return neighbors;
